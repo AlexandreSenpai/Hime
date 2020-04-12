@@ -15,6 +15,18 @@ if __name__ == '__main__':
     for block in response[1]:
         translations.append((translate.translate(text=block.get('text', ''), target_language='pt-br'), block.get('area'), block.get('text_box_size')))
 
+    """
+    # added this so we don't need to send requests for google when testing
+    translations = [
+        ('E eu vou ficar aqui como seu convidado a partir de agora!', ((77, 76), (186, 211)), (109, 135)),
+        ('EU SOU UMA SEREIA PELO NOME MEROUNE LORELEI.', ((506, 92), (616, 190)), (110, 98)),
+        ('30', ((43, 611), (50, 616)), (7, 5)),
+        ('Espero que estejamos juntos,', ((537, 687), (605, 771)), (68, 84)),
+        ('SENHOR!', ((100, 716), (172, 745)), (72, 29)),
+        ('* CONTINUA*', ((61, 908), (168, 922)), (107, 14)),
+        ('XXXXXX', ((348, 242), (321, 327)), (-27, 85)),
+    ]
+    """
     img = response[0]
 
     #Trying to fix text position ;-;

@@ -1,5 +1,6 @@
 ###[BUILT-IN MODULES]###
 import io
+import pickle
 ###[EXTERNAL MODULES]###
 import cv2
 from google.cloud import vision
@@ -22,6 +23,13 @@ class Vision(object):
         img = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
 
         response = self.client.text_detection(image=image)
+
+        """
+        # added this so we don't need to send requests for google when testing
+        with open("response_test.txt", "rb") as response_file:
+            response = pickle.load(response_file)
+        """
+
         texts = response.full_text_annotation
         for block in texts.pages[0].blocks:
             block_text = ''
