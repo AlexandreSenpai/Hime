@@ -5,6 +5,7 @@ import cv2
 ###[PERSONAL MODULES]###
 from lib.translate import Translate
 from lib.vision import Vision
+from lib.textfit import TextFit
 
 if __name__ == '__main__':
     vision = Vision()
@@ -31,6 +32,7 @@ if __name__ == '__main__':
 
     #Trying to fix text position ;-;
     for text in translations:
+        """
         index = 0
         new_phrase = ''
         
@@ -54,7 +56,11 @@ if __name__ == '__main__':
                     new_phrase += f'{word} \n'
                 else:
                     new_phrase += f'{word} '
-
+        """
+        x, y = text[1][0]
+        new_phrase, font_scale, spacing, shiftX, shiftY = TextFit().fitText(text[0], text[2][0], text[2][1], cv2.FONT_HERSHEY_SIMPLEX)
+        x += shiftX
+        y += shiftY
         for i, line in enumerate(new_phrase.split('\n')):
             #Writing translated text into image.
             cv2.putText(img=img, text=line, org=(x, y), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=font_scale, color=(0, 0, 0), thickness=2)
