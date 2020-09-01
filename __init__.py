@@ -1,70 +1,46 @@
 ###[BUILT-IN MODULES]###
-
+from typing import Tuple
 ###[EXTERNAL MODULES]###
-import cv2
+from PIL import Image, ImageDraw
 ###[PERSONAL MODULES]###
 from lib.translate import Translate
 from lib.vision import Vision
 from lib.textfit import TextFit
 
 if __name__ == '__main__':
-    vision = Vision()
+
+    img_in = './images/sample4.jpg'
+
+    fit_tool = TextFit()
+    vision = Vision(service_account=r'') # pass here the path of your service account
     translate = Translate()
     translations = []
 
-    response = vision.detect_text('./1.png') #Image to translate
+    response: Tuple[Image.open, list] = vision.detect_text(img_in) #Image to translate
     for block in response[1]:
-        translations.append((translate.translate(text=block.get('text', ''), target_language='pt-br'), block.get('area'), block.get('text_box_size')))
+        translations.append({
+            "translated": translate.translate(text=block.get('text', ''), target_language='pt-br'),
+            "text_area": block.get('area'),
+            "text_box_size": block.get('text_box_size')
+        })
 
-    """
     # added this so we don't need to send requests for google when testing
-    translations = [
-        ('E eu vou ficar aqui como seu convidado a partir de agora!', ((77, 76), (186, 211)), (109, 135)),
-        ('EU SOU UMA SEREIA PELO NOME MEROUNE LORELEI.', ((506, 92), (616, 190)), (110, 98)),
-        ('30', ((43, 611), (50, 616)), (7, 5)),
-        ('Espero que estejamos juntos,', ((537, 687), (605, 771)), (68, 84)),
-        ('SENHOR!', ((100, 716), (172, 745)), (72, 29)),
-        ('* CONTINUA*', ((61, 908), (168, 922)), (107, 14)),
-        ('XXXXXX', ((348, 242), (321, 327)), (-27, 85)),
-    ]
-    """
+    # translations = [
+    #     {'translated': 'ASSIM, QUANTO TEMPO DURA O CARA RESISTENTE?', 'text_area': ((671, 123), (797, 184)), 'text_box_size': (124, 61)},
+    #     {'translated': 'POR QUE NÃO SABEMOS?', 'text_area': ((68, 544), (188, 575)), 'text_box_size': (117, 31)},
+    #     {'translated': 'Oh,', 'text_area': ((288, 1011), (310, 1022)), 'text_box_size': (20, 11)},
+    #     {'translated': 'WHOO00 000000 AAAAAA !!', 'text_area': ((675, 1041), (769, 1098)), 'text_box_size': (92, 57)},
+    #     {'translated': 'meu?', 'text_area': ((79, 1111), (104, 1123)), 'text_box_size': (23, 12)},
+    #     {'translated': '120', 'text_area': ((759, 1205), (785, 1216)), 'text_box_size': (24, 11)}
+    # ]
+
     img = response[0]
+    # img = Image.open('./blank.jpg')
+    canvas = ImageDraw.Draw(img)
 
     #Trying to fix text position ;-;
-    for text in translations:
-        """
-        index = 0
-        new_phrase = ''
-        
-        x, y = text[1][0]
-        spacing = 20
-        font_scale = 1
+    for obj in translations:
+        rows = fit_tool.fit(row_obj=obj, canvas=canvas)
 
-        for word in text[0].split():
-            index += 1
-            if text[2][0] <= 220 and text[2][0] > 150:
-                spacing = 50
-                font_scale = 1.5
-                if index % 2 == 0:
-                    new_phrase += f'{word} \n'
-                else:
-                    new_phrase += f'{word} '
-            elif text[2][0] <= 150:
-                font_scale = 1
-                spacing = 25
-                if index % 1 == 0:
-                    new_phrase += f'{word} \n'
-                else:
-                    new_phrase += f'{word} '
-        """
-        x, y = text[1][0]
-        new_phrase, font_scale, spacing, shiftX, shiftY = TextFit().fitText(text[0], text[2][0], text[2][1], cv2.FONT_HERSHEY_SIMPLEX)
-        x += shiftX
-        y += shiftY
-        for i, line in enumerate(new_phrase.split('\n')):
-            #Writing translated text into image.
-            cv2.putText(img=img, text=line, org=(x, y), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=font_scale, color=(0, 0, 0), thickness=2)
-            y = y + spacing
- 
     #Output image
-    cv2.imwrite('out.png', img)
+    img.save('out.png', 'png')

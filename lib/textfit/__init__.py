@@ -1,89 +1,53 @@
-###[EXTERNAL MODULES]###
-import cv2
+from typing import List
+import math
 
-class TextFit(object):
+from PIL import ImageFont, ImageDraw
+
+class TextFit:
     def __init__(self):
-        pass
+        self.font = ImageFont.truetype('./fonts/cc-wild-words-roman.ttf', 12)
 
     def __repr__(self):
         return 'Class made to fit a text in a rectangle'
 
-    # this tries to fit a single line of text (no new lines)
-    # returns a boolean and the width and height of the line
-    def tryToFitTextLine(self, text, width, height, fontType, fontSize):
-        textSize, baseLine = cv2.getTextSize(text, fontType, fontSize, 2)
-        return textSize[0] <= width and textSize[1] + 4 <= height, textSize[0], textSize[1] + 4
+    def how_many_words_per_row(self, text: str, font_size: tuple, x_area: int) -> (int):
+        text_chars_count = len(text)
+        letters_per_row = math.ceil(x_area / (math.ceil(font_size[0] / text_chars_count)))
+        return letters_per_row
     
-    # this do a binary search to partition the text to get the first line that fits
-    # return the index of the last word in the first line and the height of the line
-    def getFirstLine(self, text, width, height, fontType, fontSize):
-        l = 0
-        r = len(text) - 1
-        ans = -1
-        lineWidth = 0
-        lineHeight = 0
+    def need_slash_space(self, words_per_row: int=0, row_index: int=0) -> (bool):
+        if row_index > words_per_row:
+            return True
+        return False 
 
-        while l <= r:
-            m = (l + r) // 2
-            
-            fit, w, h = self.tryToFitTextLine(" ".join(text[:m + 1]), width, height, fontType, fontSize)
-            if fit:
-                ans = m
-                lineHeight = h
-                lineWidth = w
-                l = m + 1
-            else:
-                r = m - 1
+    def create_row_with_slash(self, row_obj: dict) -> (List[str]):
+        rows = []    
+        font_size = self.font.getsize(text=row_obj.get('translated'))
+        words_per_row = self.how_many_words_per_row(text=row_obj.get('translated'), font_size=font_size, x_area=row_obj.get('text_box_size')[0])
         
-        return ans, lineWidth, lineHeight
-    
-    # try to fill the whole text with the given font size
-    # return a width, height and the splitted text
-    def tryToFitText(self, text, width, height, fontType, fontSize):
-        text = text.split()
-        textWidth = 0
-        textHeight = 0
-        ans = []
+        raw_index = 0
+        row = ''
+        for index, letter in enumerate(row_obj.get('translated')):
+            raw_index += 1
+            need_slash = self.need_slash_space(words_per_row=words_per_row, row_index=raw_index)
 
-        while len(text) > 0:
-            firstLineIdx, firstLineWidth, firstLineHeight = self.getFirstLine(text, width, height, fontType, fontSize)
-            if firstLineIdx == -1:
-                textWidth = float("inf")
-                textHeight = float("inf")
-                ans.append(text[0])
-                text = text[1:] if len(text) > 1 else []
-            else:
-                ans.append(" ".join(text[:firstLineIdx + 1]))
-                text = text[firstLineIdx + 1:] if firstLineIdx < len(text) else []
-                textHeight += firstLineHeight
-                textWidth = max(textWidth, firstLineWidth)
-            
-        return textWidth, textHeight, ans
-    
-    # try different font sizes to fit the text
-    # return the final string (with new lines chars), the font size and the spacing
-    def fitText(self, text, width, height, fontType):
-        fontSizes = [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2]
-        spacings = [16, 16, 26, 26, 36, 36, 47]
-        finalText = ""
-        bestSize = 0
-        bestSpacing = 0
-        shiftX = 0
-        shiftY = 0
-        for spacing, fontSize in zip(spacings, fontSizes):
-            textWidth, textHeight, currText = self.tryToFitText(text, width, height, fontType, fontSize)
-            if (textWidth <= width and textHeight <= height) or finalText == "":
-                finalText = "\n".join(currText)
-                bestSize = fontSize
-                bestSpacing = spacing
+            if need_slash is not True:
+                row += letter
+            elif need_slash is True:
+                raw_index = 0
+                row += letter + '-'
+                rows.append(row)
+                row = ''
                 
-                shiftX = int((width - textWidth) // 2) + 2 if textWidth < width else 2
-                shiftY = int((height - textHeight) // 2) + 2 if textHeight < height else 2
+            if index == len(row_obj.get('translated')) - 1:
+                rows.append(row)
 
-            else:
-                break
-        
-        return finalText, bestSize, bestSpacing, shiftX, shiftY
-
-
-
+        return rows
+    
+    def fit(self, row_obj: dict, canvas: ImageDraw.Draw):
+        rows = self.create_row_with_slash(row_obj=row_obj)
+        x, y = row_obj.get('text_area')[0]
+        shift_y = 0
+        for row in rows:
+            canvas.text((x, y + shift_y), row, font=self.font)
+            shift_y += 12

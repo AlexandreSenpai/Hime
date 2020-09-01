@@ -4,14 +4,14 @@ import six
 from google.cloud import translate_v2 as translate 
 ###[PERSONAL MODULES]###
 
-class Translate(object):
+class Translate:
     def __init__(self):
         self.client = translate.Client()
 
     def __repr__(self):
         return 'Class made to translate text.'
 
-    def translate(self, text, target_language):
+    def translate(self, text: str, target_language: str) -> (dict):
         if isinstance(text, six.binary_type):
             text = text.decode('utf-8')
 
