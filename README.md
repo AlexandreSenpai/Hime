@@ -5,6 +5,12 @@ This script translates manga pages using CLOUD VISION API to recognize text in i
 
 For update notes follow me on [Twitter](https://twitter.com/AlexandreSenpa1).
 
+### Latest commit
+|Before|After|
+|:------:|:-----:|
+|<img src='https://pbs.twimg.com/media/EhCZjiIXgAc194Q?format=jpg&name=large' />|<img src='https://pbs.twimg.com/media/EhCZku7WsAAHSdR?format=png&name=large' />|
+
+### Previous commit
 |Before|After|
 |:------:|:-----:|
 |<img src='https://pbs.twimg.com/media/Eg1qL7xWoAA0CBs?format=jpg&name=large' />|<img src='https://pbs.twimg.com/media/Eg1qNClXkAI5-TJ?format=png&name=large' />|

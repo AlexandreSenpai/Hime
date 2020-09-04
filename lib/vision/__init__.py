@@ -56,6 +56,7 @@ class Vision:
 
             self.text_blocks.append({
                 "text": block_text,
+                "font_color": image.getpixel((coord1[0] + 10, coord1[1] - 5)),
                 "area": (
                     (coords[0].x - 5, coords[0].y),
                     (coords[2].x - 5, coords[2].y)
