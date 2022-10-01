@@ -1,0 +1,4 @@
+[console_scripts]
+ptw = pytest_watch:main
+pytest-watch = pytest_watch:main
+

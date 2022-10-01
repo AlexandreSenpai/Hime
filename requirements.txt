@@ -1,3 +1,2 @@
-google-cloud-vision
-google-cloud-translate==2.0.0
-Pillow
+pytest-watch==4.2.0
+pytest==7.1.3
