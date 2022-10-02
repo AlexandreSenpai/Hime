@@ -1,0 +1,130 @@
+[
+    {
+        "label": "os",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "os",
+        "description": "os",
+        "detail": "os",
+        "documentation": {}
+    },
+    {
+        "label": "client",
+        "importPath": "google.cloud",
+        "description": "google.cloud",
+        "isExtraImport": true,
+        "detail": "google.cloud",
+        "documentation": {}
+    },
+    {
+        "label": "translate_v2",
+        "importPath": "google.cloud",
+        "description": "google.cloud",
+        "isExtraImport": true,
+        "detail": "google.cloud",
+        "documentation": {}
+    },
+    {
+        "label": "vision",
+        "importPath": "google.cloud",
+        "description": "google.cloud",
+        "isExtraImport": true,
+        "detail": "google.cloud",
+        "documentation": {}
+    },
+    {
+        "label": "cv2",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "cv2",
+        "description": "cv2",
+        "detail": "cv2",
+        "documentation": {}
+    },
+    {
+        "label": "six",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "six",
+        "description": "six",
+        "detail": "six",
+        "documentation": {}
+    },
+    {
+        "label": "Tuple",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "io",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "io",
+        "description": "io",
+        "detail": "io",
+        "documentation": {}
+    },
+    {
+        "label": "Image",
+        "importPath": "PIL",
+        "description": "PIL",
+        "isExtraImport": true,
+        "detail": "PIL",
+        "documentation": {}
+    },
+    {
+        "label": "ImageDraw",
+        "importPath": "PIL",
+        "description": "PIL",
+        "isExtraImport": true,
+        "detail": "PIL",
+        "documentation": {}
+    },
+    {
+        "label": "types",
+        "importPath": "google.cloud.vision",
+        "description": "google.cloud.vision",
+        "isExtraImport": true,
+        "detail": "google.cloud.vision",
+        "documentation": {}
+    },
+    {
+        "label": "Auth",
+        "kind": 6,
+        "importPath": "lib.authenticator",
+        "description": "lib.authenticator",
+        "peekOfCode": "class Auth:\n    def __init__(self, service: Service, credentials_path: str):\n        self._service = service \n        self._credentials_path = credentials_path\n        self._client = self._set_credentials()\n    @property\n    def client(self):\n        return self._client\n    def _set_credentials(self):\n        if os.path.isfile(self._credentials_path):",
+        "detail": "lib.authenticator",
+        "documentation": {}
+    },
+    {
+        "label": "TextFit",
+        "kind": 6,
+        "importPath": "lib.textfit",
+        "description": "lib.textfit",
+        "peekOfCode": "class TextFit(object):\n    def __init__(self):\n        pass\n    def __repr__(self):\n        return 'Class made to fit a text in a rectangle'\n    # this tries to fit a single line of text (no new lines)\n    # returns a boolean and the width and height of the line\n    def tryToFitTextLine(self, text, width, height, fontType, fontSize):\n        textSize, baseLine = cv2.getTextSize(text, fontType, fontSize, 2)\n        return textSize[0] <= width and textSize[1] + 4 <= height, textSize[0], textSize[1] + 4",
+        "detail": "lib.textfit",
+        "documentation": {}
+    },
+    {
+        "label": "Translate",
+        "kind": 6,
+        "importPath": "lib.translate",
+        "description": "lib.translate",
+        "peekOfCode": "class Translate(Auth):\n    def __init__(self, credentials_path):\n        super().__init__(service=translate.Client,\n                         credentials_path=credentials_path)\n    def __repr__(self):\n        return 'Class made to translate text.'\n    def translate(self, text: str, target_language: str) -> (dict):\n        if isinstance(text, six.binary_type):\n            text = text.decode('utf-8')\n        result = self.client.translate(",
+        "detail": "lib.translate",
+        "documentation": {}
+    },
+    {
+        "label": "Vision",
+        "kind": 6,
+        "importPath": "lib.vision",
+        "description": "lib.vision",
+        "peekOfCode": "class Vision(Auth):\n    def __init__(self, service_account: str = None):\n        self.text_blocks = []\n        super().__init__(service=vision.ImageAnnotatorClient,\n                         credentials_path=service_account)\n    def __repr__(self):\n        return 'Class made to scan and recognize text in images.'\n    def detect_text(self, image_path: str) -> (Tuple[Image.open, list]):\n        with io.open(image_path, 'rb') as image_file:\n            content = image_file.read()",
+        "detail": "lib.vision",
+        "documentation": {}
+    }
+]

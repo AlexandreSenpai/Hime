@@ -3,7 +3,7 @@
 
 from dataclasses import asdict, dataclass
 import datetime
-from typing import Any, Dict
+from typing import Dict
 import uuid
 
 @dataclass
@@ -13,18 +13,15 @@ class Entity:
     _id: str = None
     _created_at: datetime.datetime = None
     _updated_at: datetime.datetime = None
-    _props: Any = None
 
     def __init__(self,
                  entity_id: str,
                  created_at: datetime.datetime,
-                 updated_at: datetime.datetime,
-                 props: Dict[str, any]):
+                 updated_at: datetime.datetime):
 
-        self._id = entity_id or str(uuid.uuid4())
-        self._created_at = created_at or datetime.datetime.now()
-        self._updated_at = updated_at or datetime.datetime.now()
-        self._props = props
+        self._id = entity_id if entity_id is not None else str(uuid.uuid4())
+        self._created_at = created_at if created_at is not None else datetime.datetime.now()
+        self._updated_at = updated_at if updated_at is not None else datetime.datetime.now()
 
 
     @property
@@ -54,7 +51,6 @@ class Entity:
         """
         return self._updated_at
     
-    
-    def __set_props(self, props: Dict[str, any]) -> None:
-        for key, value in props.items():
-            setattr(self, key, value)
+    @property
+    def data(self) -> Dict[str, any]:
+        return asdict(self)
