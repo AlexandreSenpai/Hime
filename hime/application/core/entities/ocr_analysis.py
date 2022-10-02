@@ -3,7 +3,6 @@ import datetime
 from enum import Enum
 from typing import List
 from dataclasses import dataclass
-from typing_extensions import Self
 
 from hime.application.core.entities.entity import Entity
 from hime.application.core.entities.translation import Translation
@@ -29,8 +28,18 @@ class TextBlock:
     area: Area
     translation: Translation = field(default_factory=Translation)
     
-    def set_translation(self, translation: List[Translation]) -> Self:
+    def set_translation(self, translation: List[Translation]):
         self.translation = translation
+        
+        return self
+    
+    def set_area(self, area: Area):
+        self.area = area
+        
+        return self
+
+    def set_position(self, position: Position):
+        self.position = position
         
         return self
 

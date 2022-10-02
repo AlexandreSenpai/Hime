@@ -2,7 +2,6 @@ from dataclasses import dataclass, field
 import datetime
 from io import BytesIO, open
 import os
-from typing_extensions import Self
 
 from PIL import Image as PilImage
 
@@ -37,7 +36,7 @@ class Image(Entity):
         self.dimensions = dimensions if dimensions is not None else Dimensions()
         self.ocr_analysis = ocr_analysis if ocr_analysis is not None else OCRAnalysis()
         
-    def load(self, image_path: str) -> Self:
+    def load(self, image_path: str):
         file_exists = os.path.exists(image_path)
         
         if not file_exists:
@@ -54,24 +53,22 @@ class Image(Entity):
             
         return self
     
-    def save(self) -> Self:
+    def save(self):
         
         image = PilImage.open(self.content)
         image.save('./out.png')
         
         return self
     
-    def set_ocr_analysis(self, analysis: OCRAnalysis) -> Self:
+    def set_ocr_analysis(self, analysis: OCRAnalysis):
         self.ocr_analysis = analysis
         self._updated_at = datetime.datetime.now()
         
         return self
 
-    def set_image(self, image: BytesIO) -> Self:
+    def set_image(self, image: BytesIO):
         self.content = image
         
         self._updated_at = datetime.datetime.now()
         
         return self
-
-    

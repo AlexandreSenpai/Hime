@@ -1,3 +1,0 @@
-google-cloud-vision
-google-cloud-translate==2.0.0
-Pillow

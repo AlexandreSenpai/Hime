@@ -6,6 +6,6 @@ from hime.infra.adapters.translator.implementations.google_translator import Goo
 class TranslateImageUseCaseFactory:
     @staticmethod
     def create() -> TranslateImageUseCase:
-        return TranslateImageUseCase(ocr_service=CloudVision(service_account_path='/home/alexandresenpai/credentials/GCP/manga.json'),
-                                     translator=GoogleTranslate(service_account_path='/home/alexandresenpai/credentials/GCP/manga.json'),
+        return TranslateImageUseCase(ocr_service=CloudVision(service_account_path='/root/credentials/gcp/hime.json'),
+                                     translator=GoogleTranslate(service_account_path='/root/credentials/gcp/hime.json'),
                                      image_editor_service=Pillow())

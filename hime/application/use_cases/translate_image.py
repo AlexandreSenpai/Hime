@@ -34,7 +34,7 @@ class TranslateImageUseCase:
         for image in images:
             for block in image.ocr_analysis.blocks:
                 translation = self.translator.translate(text=block.text, 
-                                                                language=Language(source='en-US', target='pt-BR'))
+                                                        language=Language(source='en-US', target='pt-BR'))
                 block.set_translation(translation)
         return images
         
@@ -43,12 +43,14 @@ class TranslateImageUseCase:
         images = [Image().load(image_path) for image_path in data.images]
         
         images_with_ocr_analysis = self.get_text_blocks_from_image(images=images)
-        images_with_translations = self.translate_text_blocks_from_image(images=images_with_ocr_analysis)
         
-        blank_images = [self.image_editor_service.cover_old_text_with_dialog_boxes(image) for image in images_with_translations]
-        final_images = [self.image_editor_service.set_translated_text_to_image(image) for image in blank_images]
+        blank_images = [self.image_editor_service.cover_old_text_with_dialog_boxes(image) for image in images_with_ocr_analysis]
+        
+        # images_with_translations = self.translate_text_blocks_from_image(images=blank_images)
+        
+        # final_images = [self.image_editor_service.set_translated_text_to_image(image) for image in blank_images]
     
-        final_images[0].save()
+        # final_images[0].save()
         
         
         
