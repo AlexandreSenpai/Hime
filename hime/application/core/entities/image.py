@@ -42,7 +42,7 @@ class Image(Entity):
         if not file_exists:
             raise ApiError.resource_not_found(message='Could not find the provided file.', 
                                               payload={ 'image_path': image_path })
-        
+        print(image_path)
         with open(image_path, 'rb') as img:
             self.content.write(img.read())
             image = PilImage.open(self.content)
@@ -53,10 +53,10 @@ class Image(Entity):
             
         return self
     
-    def save(self):
+    def save(self, filename: str):
         
         image = PilImage.open(self.content)
-        image.save('./out.png')
+        image.save(filename)
         
         return self
     

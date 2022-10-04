@@ -46,6 +46,8 @@ class CloudVision:
         
         imageToText = OCRAnalysis()
         
+        if not text_blocks: return imageToText
+        
         for text_block in text_blocks.pages[0].blocks:
             current_text_block = TextBlock(text=self.extract_text_from_paragraphs(paragraphs=text_block.paragraphs),
                                            position=self.extract_text_left_top_coords(bounding_box=text_block.bounding_box),

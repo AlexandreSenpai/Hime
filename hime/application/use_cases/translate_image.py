@@ -46,11 +46,12 @@ class TranslateImageUseCase:
         
         blank_images = [self.image_editor_service.cover_old_text_with_dialog_boxes(image) for image in images_with_ocr_analysis]
         
-        # images_with_translations = self.translate_text_blocks_from_image(images=blank_images)
+        images_with_translations = self.translate_text_blocks_from_image(images=blank_images)
         
-        # final_images = [self.image_editor_service.set_translated_text_to_image(image) for image in blank_images]
+        final_images = [self.image_editor_service.set_translated_text_to_image(image) for image in images_with_translations]
     
-        # final_images[0].save()
+        for image in final_images:
+            image.save(filename=f'./results/{image.id}.png')
         
         
         
