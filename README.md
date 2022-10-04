@@ -17,7 +17,7 @@ For update notes follow me on [Twitter](https://twitter.com/AlexandreSenpa1).
 
 ## Requirements
 
-- Python 3.7+
+- Python 3.8+
 - Google Cloud Vision API
 - Google Cloud Translate API
 
@@ -31,10 +31,14 @@ Once you've opened it just change the img_in variable with the source image path
 Ex:
 
 ```python
+from hime import hime, TranslateImageRequestDTO, LanguageOptions
+
 if __name__ == '__main__':
-    img_in = './images/sample4.jpg'
+    hime.execute(data=TranslateImageRequestDTO(language=LanguageOptions(source='en-US',
+                                                                        target='pt-BR'),
+                                               images=['/root/code/Manga-AutoTranslate/tests/static/1.jpg']))
 ```
 
-Now you just have to run it and wait for the **out.png** be generated at the root folder of this project.
+Now you just have to run it and wait for the **./results/{image.id}.png** be generated at the results folder of this project.
 
 Thanks for using!
